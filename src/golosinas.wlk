@@ -1,3 +1,5 @@
+import mariano.*
+
 /*
  * Los sabores
  */
@@ -21,6 +23,15 @@ class Bombon {
 	method libreGluten() { return true }
 }
 
+class BombonDuro inherits Bombon{
+	override method mordisco(){peso = peso-1}
+	method gradoDeDureza(){
+		return if(peso > 12){3}
+		else if(peso.between(8,12))
+			{2}
+			else 1
+	}
+}
 
 class Alfajor {
 	var peso = 15
@@ -34,14 +45,25 @@ class Alfajor {
 
 class Caramelo {
 	var peso = 5
+	var property sabor = frutilla
 
 	method precio() { return 12 }
 	method peso() { return peso }
 	method mordisco() { peso = peso - 1 }
-	method sabor() { return frutilla }
 	method libreGluten() { return true }
 }
 
+class CarameloCorazonDeChocolate inherits Caramelo{
+	override method mordisco(){
+		super()
+		self.sabor(chocolate)
+	}
+	override method precio(){
+		return super() + 1
+	}
+	
+		
+}
 
 class Chupetin {
 	var peso = 7
@@ -75,6 +97,20 @@ class Oblea {
 	method libreGluten() { return false }
 }
 
+class ObleaCrujientes inherits Oblea{
+	var cantidadDeMordisco = 0
+	override method mordisco(){
+			super()
+			cantidadDeMordisco = cantidadDeMordisco + 1
+			if(cantidadDeMordisco < 3){
+				peso = peso - 3
+			} 
+	}
+	method estaDebil(){
+		return cantidadDeMordisco > 3
+	}
+}
+
 class Chocolatin {
 	// hay que acordarse de *dos* cosas, el peso inicial y el peso actual
 	// el precio se calcula a partir del precio inicial
@@ -90,9 +126,23 @@ class Chocolatin {
 	method libreGluten() { return false }
 
 }
+object heladeraDeMariano{
+	var property humedad = 0
+}
+class ChocolatinVip inherits Chocolatin{
+	override method peso(){
+		return
+		super()* (1 + self.humedad())
+	}
+	method humedad(){heladeraDeMariano.humedad()}
+}
+
+class ChocolatinPremium inherits ChocolatinVip{
+	override method humedad(){return super()/2}
+}
 
 class GolosinaBaniada {
-	var golosinaInterior
+	var property golosinaInterior
 	var pesoBanio = 4
 	
 	method golosinaInterior(unaGolosina) { golosinaInterior = unaGolosina }
@@ -109,7 +159,7 @@ class GolosinaBaniada {
 
 class Tuttifrutti {
 	var libreDeGluten
-	var sabores = [frutilla, chocolate, naranja]
+	const sabores = [frutilla, chocolate, naranja]
 	var saborActual = 0
 	
 	method mordisco() { saborActual += 1 }	
@@ -120,3 +170,7 @@ class Tuttifrutti {
 	method libreGluten() { return libreDeGluten }	
 	method libreGluten(valor) { libreDeGluten = valor }
 }
+
+
+
+
